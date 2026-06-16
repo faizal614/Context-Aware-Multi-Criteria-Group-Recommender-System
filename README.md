@@ -103,29 +103,20 @@ streamlit run app.py
 └──────────────────┬──────────────────────────────────────────┘
                    │
 ┌──────────────────▼──────────────────────────────────────────┐
-│                    API Gateway Layer                        │
-│           (REST API / Flask Endpoints)                      │
-└──────────────────┬──────────────────────────────────────────┘
-                   │
-┌──────────────────▼──────────────────────────────────────────┐
-│              Recommendation Engine Layer                    │
+│                 Recommendation Engine                       │
 ├──────────────────────────────────────────────────────────────┤
 │  ┌─────────────────┐  ┌──────────────────┐  ┌────────────┐ │
 │  │ Context-Aware   │  │ Multi-Criteria   │  │  Preference│ │
 │  │   Filter        │  │  Scorer          │  │  Aggregator│ │
 │  └─────────────────┘  └──────────────────┘  └────────────┘ │
-│  ┌─────────────────┐  ┌──────────────────┐                  │
-│  │ Collaborative   │  │ Consensus        │                  │
-│  │ Filtering       │  │ Algorithm        │                  │
-│  └─────────────────┘  └──────────────────┘                  │
 └──────────────────┬──────────────────────────────────────────┘
                    │
 ┌──────────────────▼──────────────────────────────────────────┐
 │          Machine Learning Models Layer                      │
 ├──────────────────────────────────────────────────────────────┤
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐   │
-│  │  Neural      │  │  Matrix      │  │  Knowledge Graph │   │
-│  │  Networks    │  │  Factorization│  │  Embeddings     │   │
+│  │  Neural      │  │  Matrix      │  │  Collaborative   │   │
+│  │  Networks    │  │  Factorization│  │  Filtering       │   │
 │  └──────────────┘  └──────────────┘  └──────────────────┘   │
 └──────────────────┬──────────────────────────────────────────┘
                    │
@@ -142,14 +133,11 @@ streamlit run app.py
 
 ```
 Context-Aware-Multi-Criteria-Group-Recommender-System/
-├── MCGRS.ipynb                      # Main Jupyter notebook with complete implementation
-├── app.py                           # Streamlit application for interactive recommendations
-├── mcgrs_model.pth                  # Pre-trained model weights
-├── dataset/                         # Dataset directory (for storing data)
-├── docs/
-│   └── images/                      # Documentation images
-│       └── streamlit_interface.png  # Streamlit frontend screenshot
-├── README.md                        # This file
+├── MCGRS.ipynb                  # Main Jupyter notebook with complete implementation
+├── app.py                       # Streamlit application for interactive recommendations
+├── mcgrs_model.pth              # Pre-trained model weights
+├── dataset/                     # Dataset directory (for storing data)
+├── README.md                    # This file
 └── .gitignore
 ```
 
@@ -161,7 +149,6 @@ Context-Aware-Multi-Criteria-Group-Recommender-System/
 | **app.py** | Streamlit-based interactive web application for serving recommendations with an intuitive UI |
 | **mcgrs_model.pth** | Pre-trained model weights (PyTorch format) for immediate use |
 | **dataset/** | Directory for storing training and test datasets |
-| **docs/images/** | Documentation images including screenshots of the frontend |
 
 ## Installation
 
@@ -196,7 +183,7 @@ conda activate mcgrs
 Create a `requirements.txt` file with necessary dependencies:
 
 ```bash
-pip install numpy pandas scikit-learn tensorflow torch flask streamlit jupyter matplotlib seaborn plotly
+pip install numpy pandas scikit-learn tensorflow torch streamlit jupyter matplotlib seaborn plotly
 ```
 
 Or if you have a requirements.txt file:
@@ -206,21 +193,6 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-
-### Running the Jupyter Notebook
-
-The main implementation is in `MCGRS.ipynb`. To explore and run it:
-
-```bash
-jupyter notebook MCGRS.ipynb
-```
-
-This notebook includes:
-- Data loading and exploration
-- Data preprocessing and feature engineering
-- Model development and training
-- Evaluation and visualization
-- Example recommendations
 
 ### Running the Streamlit Application
 
@@ -238,15 +210,20 @@ The application will open at `http://localhost:8501` in your default browser.
 - Visual rating displays
 - Model details and input visualization
 
-### Running the Flask API Server
+### Running the Jupyter Notebook
 
-To run the recommendation API server:
+The main implementation is in `MCGRS.ipynb`. To explore and run it:
 
 ```bash
-python app.py  # If configured for Flask
+jupyter notebook MCGRS.ipynb
 ```
 
-The API will be available at `http://localhost:5000`
+This notebook includes:
+- Data loading and exploration
+- Data preprocessing and feature engineering
+- Model development and training
+- Evaluation and visualization
+- Example recommendations
 
 ### Python API Example
 
@@ -431,10 +408,9 @@ user_id, item_id, rating, timestamp, context_json
 - **TensorFlow/Keras** - Deep learning framework
 - **PyTorch** - Deep learning framework
 
-### Web & API
+### Web & UI
 - **Streamlit** - Interactive web application framework
-- **Flask** - REST API framework
-- **REST** - API architecture
+- **Flask** - REST API framework (optional)
 
 ### Data Processing & Visualization
 - **Matplotlib/Seaborn** - Static visualization
@@ -509,7 +485,6 @@ CONSENSUS_THRESHOLD = 0.7
    streamlit run app.py
    ```
    Open http://localhost:8501 in your browser
-<img width="1363" height="479" alt="image" src="https://github.com/user-attachments/assets/7550e561-6e2a-4dcb-bbe6-413a01359455" />
 
 3. **Explore the Notebook:**
    ```bash
@@ -573,7 +548,7 @@ If you use MCGRS in your research, please cite:
 
 ## Contact & Support
 
-- 📧 **Email:** [mohammedfaizalh20@gmail.com]
+- 📧 **Email:** [Your email]
 - 🐙 **GitHub:** [@faizal614](https://github.com/faizal614)
 - 💬 **Issues:** [GitHub Issues](https://github.com/faizal614/Context-Aware-Multi-Criteria-Group-Recommender-System/issues)
 - 🤝 **Discussions:** [GitHub Discussions](https://github.com/faizal614/Context-Aware-Multi-Criteria-Group-Recommender-System/discussions)
