@@ -96,9 +96,6 @@ MCGRS is an advanced AI-based recommendation system that delivers personalized g
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │ User Profiles | Items | Ratings | Context | Feedback │   │
 │  └──────────────────────────────────────────────────────┘   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │ Database (SQL) | Cache (Redis) | Data Lake          │   │
-│  └──────────────────────────────────────────────────────┘   │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -106,77 +103,22 @@ MCGRS is an advanced AI-based recommendation system that delivers personalized g
 
 ```
 Context-Aware-Multi-Criteria-Group-Recommender-System/
-├── notebooks/
-│   ├── 01_data_exploration.ipynb           # Dataset analysis
-│   ├── 02_data_preprocessing.ipynb         # Data cleaning and preparation
-│   ├── 03_feature_engineering.ipynb        # Feature creation
-│   ├── 04_collaborative_filtering.ipynb    # CF implementation
-│   ├── 05_context_aware_filtering.ipynb    # Context modeling
-│   ├── 06_multi_criteria_scoring.ipynb     # MCDA approaches
-│   ├── 07_group_preference_aggregation.ipynb
-│   ├── 08_consensus_algorithm.ipynb        # Group consensus
-│   ├── 09_model_evaluation.ipynb           # Performance metrics
-│   └── 10_results_visualization.ipynb      # Results analysis
-│
-├── src/
-│   ├── __init__.py
-│   ├── config.py                           # Configuration settings
-│   ├── data/
-│   │   ├── loader.py                       # Data loading utilities
-│   │   ├── preprocessor.py                 # Data preprocessing
-│   │   └── features.py                     # Feature engineering
-│   │
-│   ├── models/
-│   │   ├── base.py                         # Base model class
-│   │   ├── collaborative_filtering.py      # CF models
-│   │   ├── context_aware.py                # Context-aware models
-│   │   ├── multi_criteria.py               # MCDA models
-│   │   └── neural_networks.py              # Deep learning models
-│   │
-│   ├── algorithms/
-│   │   ├── preference_aggregation.py       # Group preference combination
-│   │   ├── consensus.py                    # Consensus algorithms
-│   │   ├── ranking.py                      # Ranking algorithms
-│   │   └── similarity.py                   # Similarity metrics
-│   │
-│   ├── evaluation/
-│   │   ├── metrics.py                      # Evaluation metrics
-│   │   ├── validator.py                    # Model validation
-│   │   └── comparator.py                   # Baseline comparison
-│   │
-│   └── utils/
-│       ├── helpers.py                      # Utility functions
-│       ├── logger.py                       # Logging setup
-│       └── constants.py                    # Constants
-│
-├── api/
-│   ├── app.py                              # Flask/FastAPI application
-│   ├── routes.py                           # API endpoints
-│   ├── schemas.py                          # Request/response schemas
-│   └── middleware.py                       # Authentication, logging
-│
-├── data/
-│   ├── raw/                                # Original datasets
-│   ├── processed/                          # Cleaned datasets
-│   └── models/                             # Pre-trained models
-│
-├── results/
-│   ├── metrics/                            # Performance metrics
-│   ├── plots/                              # Visualization outputs
-│   └── logs/                               # Experiment logs
-│
-├── tests/
-│   ├── test_data.py
-│   ├── test_models.py
-│   ├── test_algorithms.py
-│   └── test_api.py
-│
-├── requirements.txt                        # Python dependencies
-├── setup.py                                # Package setup
-├── .gitignore
-├── README.md                               # This file
-└── LICENSE
+├── MCGRS.ipynb                      # Main Jupyter notebook with complete implementation
+├── app.py                           # Flask application for recommendations API
+├── mcgrs_model.pth                  # Pre-trained model weights
+├── dataset/                         # Dataset directory (for storing data)
+├── README.md                        # This file
+└── .gitignore
 ```
+
+### File Descriptions
+
+| File | Description |
+|------|-------------|
+| **MCGRS.ipynb** | Comprehensive Jupyter notebook containing the full implementation including data exploration, preprocessing, model training, and evaluation |
+| **app.py** | Flask-based REST API server for serving recommendations in production |
+| **mcgrs_model.pth** | Pre-trained model weights (PyTorch format) for immediate use |
+| **dataset/** | Directory for storing training and test datasets |
 
 ## Installation
 
@@ -208,51 +150,53 @@ conda activate mcgrs
 
 ### Step 3: Install Dependencies
 
+Create a `requirements.txt` file with necessary dependencies:
+
+```bash
+pip install numpy pandas scikit-learn tensorflow torch flask jupyter matplotlib seaborn plotly
+```
+
+Or if you have a requirements.txt file:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 4: Download Datasets (Optional)
-
-```bash
-python scripts/download_datasets.py
-```
-
 ## Usage
 
-### Running Jupyter Notebooks
+### Running the Jupyter Notebook
+
+The main implementation is in `MCGRS.ipynb`. To explore and run it:
 
 ```bash
-jupyter notebook notebooks/
+jupyter notebook MCGRS.ipynb
 ```
 
-### Running the Recommendation API
+This notebook includes:
+- Data loading and exploration
+- Data preprocessing and feature engineering
+- Model development and training
+- Evaluation and visualization
+- Example recommendations
+
+### Running the Flask API Server
+
+To run the recommendation API server:
 
 ```bash
-# Development server
-python api/app.py
-
-# Production server with Gunicorn
-gunicorn -w 4 -b 0.0.0.0:5000 api.app:app
+python app.py
 ```
+
+The API will be available at `http://localhost:5000`
 
 ### Python API Example
 
 ```python
-from src.models import MCGRSRecommender
-from src.config import Config
+# Import the application
+from app import get_recommendations, get_group_recommendations
 
-# Initialize configuration
-config = Config()
-
-# Create recommender instance
-recommender = MCGRSRecommender(config)
-
-# Load pre-trained models
-recommender.load_models('data/models/')
-
-# Single user recommendation
-recommendation = recommender.recommend(
+# Get single user recommendation
+recommendation = get_recommendations(
     user_id=123,
     num_recommendations=5,
     context={'time': 'evening', 'location': 'home'}
@@ -260,8 +204,8 @@ recommendation = recommender.recommend(
 
 print(recommendation)
 
-# Group recommendation
-group_recommendation = recommender.recommend_group(
+# Get group recommendation
+group_recommendation = get_group_recommendations(
     user_ids=[123, 456, 789],
     num_recommendations=5,
     aggregation_method='weighted_mean',
@@ -276,7 +220,7 @@ print(group_recommendation)
 #### Get Single User Recommendations
 
 ```bash
-POST /api/v1/recommend/user
+POST http://localhost:5000/api/recommend/user
 Content-Type: application/json
 
 {
@@ -289,10 +233,28 @@ Content-Type: application/json
 }
 ```
 
+**Response:**
+```json
+{
+  "user_id": 123,
+  "recommendations": [
+    {
+      "rank": 1,
+      "item_id": 456,
+      "item_title": "Product/Item Name",
+      "predicted_rating": 4.8,
+      "confidence": 0.95,
+      "explanation": "Based on your preferences..."
+    }
+  ],
+  "timestamp": "2024-01-15T10:30:00Z"
+}
+```
+
 #### Get Group Recommendations
 
 ```bash
-POST /api/v1/recommend/group
+POST http://localhost:5000/api/recommend/group
 Content-Type: application/json
 
 {
@@ -306,10 +268,23 @@ Content-Type: application/json
 }
 ```
 
-#### Get Recommendation Explanations
-
-```bash
-GET /api/v1/explain/recommendation/:recommendation_id
+**Response:**
+```json
+{
+  "group_id": "group_001",
+  "user_ids": [123, 456, 789],
+  "recommendations": [
+    {
+      "rank": 1,
+      "item_id": 456,
+      "item_title": "Product/Item Name",
+      "predicted_rating": 4.8,
+      "group_consensus": 0.85,
+      "individual_predictions": [4.8, 4.6, 4.9]
+    }
+  ],
+  "timestamp": "2024-01-15T10:30:00Z"
+}
 ```
 
 ## Methodology
@@ -347,10 +322,10 @@ Contextual dimensions considered:
 ## Model Components
 
 ### 1. Collaborative Filtering Module
-- **User-Based CF** - Recommendations based on similar users
-- **Item-Based CF** - Recommendations based on similar items
-- **Matrix Factorization** - Latent factor models (SVD, NMF)
-- **Deep Learning CF** - Neural collaborative filtering
+- User-Based CF - Recommendations based on similar users
+- Item-Based CF - Recommendations based on similar items
+- Matrix Factorization - Latent factor models (SVD, NMF)
+- Deep Learning CF - Neural collaborative filtering
 
 ### 2. Content-Based Filtering
 - Item feature analysis
@@ -358,22 +333,20 @@ Contextual dimensions considered:
 - TF-IDF vectorization
 - Similarity calculations
 
-### 3. Knowledge Graph
-- Entity relationships
-- Semantic connections
-- Link prediction
-- Graph embeddings
-
-### 4. Deep Neural Networks
-- Neural Collaborative Filtering
-- Recurrent Neural Networks (RNN/LSTM) for sequences
-- Attention mechanisms for importance weighting
-- Graph Neural Networks (GNN)
-
-### 5. Context Encoder
+### 3. Context Encoder
 - Multi-modal context encoding
 - Embedding layers
 - Feature fusion techniques
+
+### 4. Preference Aggregator
+- Group preference combination
+- Consensus building
+- Fairness optimization
+
+### 5. Ranking & Scoring
+- Multi-criteria scoring
+- Ranking algorithms
+- Diversity-aware sorting
 
 ## Performance Metrics
 
@@ -417,121 +390,54 @@ item_id, title, category, attributes_json, description
 user_id, item_id, rating, timestamp, context_json
 ```
 
-**Context Table:**
-```csv
-rating_id, context_type, context_value, weight
-```
-
 ## Technologies
 
 ### Core Libraries
 - **NumPy** - Numerical computing
-- **Pandas** - Data manipulation
+- **Pandas** - Data manipulation and analysis
 - **Scikit-learn** - Machine learning algorithms
-- **TensorFlow/Keras** - Deep learning
+- **TensorFlow/Keras** - Deep learning framework
 - **PyTorch** - Alternative deep learning framework
 
-### Data & Databases
-- **SQLAlchemy** - ORM
-- **PostgreSQL/MongoDB** - Data storage
-- **Redis** - Caching layer
-- **Elasticsearch** - Search and indexing
+### API & Web
+- **Flask** - Web application framework
+- **REST** - API architecture
 
-### API & Deployment
-- **Flask/FastAPI** - Web framework
-- **Docker** - Containerization
-- **Kubernetes** - Orchestration
-- **AWS/GCP** - Cloud deployment
-
-### Visualization & Analysis
-- **Matplotlib/Seaborn** - Static plots
-- **Plotly** - Interactive visualizations
+### Data Processing
+- **Matplotlib/Seaborn** - Static visualization
+- **Plotly** - Interactive visualization
 - **Jupyter** - Notebook environment
 
 ### Development
-- **Pytest** - Unit testing
-- **Black** - Code formatting
-- **Pylint** - Code linting
 - **Git** - Version control
+- **Python 3.8+** - Programming language
 
 ## Configuration
 
-### config.py Example
+### Key Parameters (in MCGRS.ipynb)
 
 ```python
-class Config:
-    # Data settings
-    DATA_PATH = 'data/processed/'
-    BATCH_SIZE = 32
-    TEST_SIZE = 0.2
-    
-    # Model settings
-    NUM_FACTORS = 50
-    LEARNING_RATE = 0.001
-    NUM_EPOCHS = 100
-    EARLY_STOPPING = True
-    
-    # MCDA settings
-    CRITERIA_WEIGHTS = {
-        'preference': 0.3,
-        'popularity': 0.2,
-        'context': 0.25,
-        'diversity': 0.15,
-        'consensus': 0.1
-    }
-    
-    # Context settings
-    CONTEXT_DIMENSIONS = ['temporal', 'spatial', 'social', 'situational']
-    
-    # Aggregation settings
-    AGGREGATION_METHOD = 'weighted_mean'
-    CONSENSUS_THRESHOLD = 0.7
-    
-    # API settings
-    API_HOST = '0.0.0.0'
-    API_PORT = 5000
-    DEBUG = False
-```
+# Model parameters
+NUM_FACTORS = 50
+LEARNING_RATE = 0.001
+NUM_EPOCHS = 100
+BATCH_SIZE = 32
 
-## API Reference
-
-### Request/Response Examples
-
-#### Get User Profile
-```json
-{
-  "user_id": 123,
-  "name": "John Doe",
-  "preferences": {
-    "genres": ["comedy", "action"],
-    "languages": ["english"],
-    "ratings_threshold": 3.5
-  },
-  "context": {
-    "location": "new_york",
-    "timezone": "EST"
-  }
+# MCDA weights
+CRITERIA_WEIGHTS = {
+    'preference': 0.3,
+    'popularity': 0.2,
+    'context': 0.25,
+    'diversity': 0.15,
+    'consensus': 0.1
 }
-```
 
-#### Recommendation Response
-```json
-{
-  "recommendations": [
-    {
-      "rank": 1,
-      "item_id": 456,
-      "item_title": "Movie Title",
-      "predicted_rating": 4.8,
-      "confidence": 0.95,
-      "explanation": "Based on your preference for action movies...",
-      "diversity_score": 0.7,
-      "group_consensus": 0.85
-    }
-  ],
-  "timestamp": "2024-01-15T10:30:00Z",
-  "request_id": "req_12345"
-}
+# Context dimensions
+CONTEXT_DIMENSIONS = ['temporal', 'spatial', 'social']
+
+# Aggregation settings
+AGGREGATION_METHOD = 'weighted_mean'
+CONSENSUS_THRESHOLD = 0.7
 ```
 
 ## Evaluation Results
@@ -543,7 +449,6 @@ class Config:
 | User-Based CF | 0.95 | 0.76 | 0.58 | 0.62 |
 | Item-Based CF | 0.92 | 0.73 | 0.61 | 0.65 |
 | Matrix Factorization | 0.88 | 0.70 | 0.65 | 0.70 |
-| Neural CF | 0.85 | 0.67 | 0.68 | 0.73 |
 | **MCGRS (Proposed)** | **0.78** | **0.62** | **0.75** | **0.81** |
 
 ### Group Recommendation Performance
@@ -555,18 +460,46 @@ class Config:
 | Consensus | N/A | 0.68 | **0.82** |
 | Diversity | 0.71 | 0.75 | **0.79** |
 
+## Quick Start Guide
+
+1. **Clone and Setup:**
+   ```bash
+   git clone https://github.com/faizal614/Context-Aware-Multi-Criteria-Group-Recommender-System.git
+   cd Context-Aware-Multi-Criteria-Group-Recommender-System
+   python -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+2. **Explore the Notebook:**
+   ```bash
+   jupyter notebook MCGRS.ipynb
+   ```
+
+3. **Run the API Server:**
+   ```bash
+   python app.py
+   ```
+
+4. **Make Recommendations:**
+   ```bash
+   curl -X POST http://localhost:5000/api/recommend/user \
+     -H "Content-Type: application/json" \
+     -d '{"user_id": 123, "num_recommendations": 5}'
+   ```
+
 ## Future Work
 
+- [ ] Web dashboard for visualization
 - [ ] Mobile application development
 - [ ] Real-time streaming recommendations
 - [ ] Advanced explainability techniques (SHAP, LIME)
 - [ ] Multi-language support
 - [ ] Federated learning for privacy
-- [ ] Zero-shot learning for new items
-- [ ] Active learning from user feedback
 - [ ] Integration with knowledge graphs
-- [ ] Cross-domain recommendations
 - [ ] Fairness-aware recommendation improvements
+- [ ] API authentication and rate limiting
+- [ ] Model versioning and deployment pipeline
 
 ## Contributing
 
@@ -580,10 +513,10 @@ We welcome contributions! Please follow these steps:
 
 ### Development Guidelines
 
-- Follow PEP 8 coding standards
-- Add unit tests for new features
+- Update the notebook or create new scripts as needed
+- Test your changes thoroughly
 - Update documentation
-- Run tests before submitting: `pytest tests/`
+- Follow Python PEP 8 standards
 
 ## License
 
@@ -615,7 +548,6 @@ If you use MCGRS in your research, please cite:
 - 📧 **Email:** [Your email]
 - 🐙 **GitHub:** [@faizal614](https://github.com/faizal614)
 - 💬 **Issues:** [GitHub Issues](https://github.com/faizal614/Context-Aware-Multi-Criteria-Group-Recommender-System/issues)
-- 📚 **Documentation:** [Full Docs](https://mcgrs.readthedocs.io)
 - 🤝 **Discussions:** [GitHub Discussions](https://github.com/faizal614/Context-Aware-Multi-Criteria-Group-Recommender-System/discussions)
 
 ## Acknowledgments
