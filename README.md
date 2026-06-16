@@ -572,7 +572,7 @@ If you use MCGRS in your research, please cite:
 
 ## Contact & Support
 
-- 📧 **Email:** [Your email]
+- 📧 **Email:** [mohammedfaizalh20@gmail.com]
 - 🐙 **GitHub:** [@faizal614](https://github.com/faizal614)
 - 💬 **Issues:** [GitHub Issues](https://github.com/faizal614/Context-Aware-Multi-Criteria-Group-Recommender-System/issues)
 - 🤝 **Discussions:** [GitHub Discussions](https://github.com/faizal614/Context-Aware-Multi-Criteria-Group-Recommender-System/discussions)
