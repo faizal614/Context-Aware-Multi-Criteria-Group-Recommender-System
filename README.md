@@ -339,7 +339,7 @@ Contextual dimensions considered:
 ### 2. Content-Based Filtering
 - Item feature analysis
 - User preference modeling
-- TF-IDF vectorization
+- TF-IDF vectorisation
 - Similarity calculations
 
 ### 3. Context Encoder
@@ -485,6 +485,7 @@ CONSENSUS_THRESHOLD = 0.7
    streamlit run app.py
    ```
    Open http://localhost:8501 in your browser
+<img width="1363" height="479" alt="image" src="https://github.com/user-attachments/assets/c7074a08-73d5-43e2-b2fd-c4a906c5e639" />
 
 3. **Explore the Notebook:**
    ```bash
@@ -548,7 +549,7 @@ If you use MCGRS in your research, please cite:
 
 ## Contact & Support
 
-- 📧 **Email:** [Your email]
+- 📧 **Email:** mohammedfaizalh20@gmail.com
 - 🐙 **GitHub:** [@faizal614](https://github.com/faizal614)
 - 💬 **Issues:** [GitHub Issues](https://github.com/faizal614/Context-Aware-Multi-Criteria-Group-Recommender-System/issues)
 - 🤝 **Discussions:** [GitHub Discussions](https://github.com/faizal614/Context-Aware-Multi-Criteria-Group-Recommender-System/discussions)
