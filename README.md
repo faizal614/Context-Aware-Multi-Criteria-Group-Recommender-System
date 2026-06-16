@@ -509,6 +509,7 @@ CONSENSUS_THRESHOLD = 0.7
    streamlit run app.py
    ```
    Open http://localhost:8501 in your browser
+<img width="1363" height="479" alt="image" src="https://github.com/user-attachments/assets/7550e561-6e2a-4dcb-bbe6-413a01359455" />
 
 3. **Explore the Notebook:**
    ```bash
