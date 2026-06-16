@@ -15,6 +15,7 @@ MCGRS is an advanced AI-based recommendation system that delivers personalized g
 ## Table of Contents
 
 - [Features](#features)
+- [Streamlit Frontend](#streamlit-frontend)
 - [System Architecture](#system-architecture)
 - [Project Structure](#project-structure)
 - [Installation](#installation)
@@ -55,17 +56,55 @@ MCGRS is an advanced AI-based recommendation system that delivers personalized g
 - User feedback integration
 - A/B testing support
 
+## Streamlit Frontend
+
+The MCGRS system includes an interactive Streamlit web application that provides a user-friendly interface for generating personalized recommendations.
+
+### Interface Features
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/faizal614/Context-Aware-Multi-Criteria-Group-Recommender-System/main/docs/images/streamlit_interface.png" alt="MCGRS Streamlit Frontend" width="900">
+</p>
+
+**Left Sidebar Controls:**
+- **Select User ID** - Choose a specific user for recommendations
+- **Select Course** - Pick the relevant course context
+- **Select Semester** - Choose the academic semester
+- **Select Lockdown Status** - Specify the lockdown context (PRE, MID, POST)
+- **Number of Recommendations** - Adjust the number of results to display (slider)
+- **Get Recommendations** - Button to generate personalized recommendations
+
+**Main Display:**
+- **Context Information** - Shows selected context parameters
+- **Top N Recommendations** - Displays ranked recommendations with:
+  - Predicted ratings (0-5 scale)
+  - Star ratings visualization
+  - Recommendation rank
+- **Model Details** - Expandable section showing model inputs and decision factors
+
+### Running the Streamlit App
+
+```bash
+# Install Streamlit if not already installed
+pip install streamlit
+
+# Run the Streamlit application
+streamlit run app.py
+
+# The app will open at http://localhost:8501
+```
+
 ## System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    User Interface Layer                     │
-│              (Web/Mobile Application Frontend)              │
+│              (Streamlit Web Application)                    │
 └──────────────────┬──────────────────────────────────────────┘
                    │
 ┌──────────────────▼──────────────────────────────────────────┐
 │                    API Gateway Layer                        │
-│           (REST API / GraphQL Endpoints)                    │
+│           (REST API / Flask Endpoints)                      │
 └──────────────────┬──────────────────────────────────────────┘
                    │
 ┌──────────────────▼──────────────────────────────────────────┐
@@ -104,9 +143,12 @@ MCGRS is an advanced AI-based recommendation system that delivers personalized g
 ```
 Context-Aware-Multi-Criteria-Group-Recommender-System/
 ├── MCGRS.ipynb                      # Main Jupyter notebook with complete implementation
-├── app.py                           # Flask application for recommendations API
+├── app.py                           # Streamlit application for interactive recommendations
 ├── mcgrs_model.pth                  # Pre-trained model weights
 ├── dataset/                         # Dataset directory (for storing data)
+├── docs/
+│   └── images/                      # Documentation images
+│       └── streamlit_interface.png  # Streamlit frontend screenshot
 ├── README.md                        # This file
 └── .gitignore
 ```
@@ -116,9 +158,10 @@ Context-Aware-Multi-Criteria-Group-Recommender-System/
 | File | Description |
 |------|-------------|
 | **MCGRS.ipynb** | Comprehensive Jupyter notebook containing the full implementation including data exploration, preprocessing, model training, and evaluation |
-| **app.py** | Flask-based REST API server for serving recommendations in production |
+| **app.py** | Streamlit-based interactive web application for serving recommendations with an intuitive UI |
 | **mcgrs_model.pth** | Pre-trained model weights (PyTorch format) for immediate use |
 | **dataset/** | Directory for storing training and test datasets |
+| **docs/images/** | Documentation images including screenshots of the frontend |
 
 ## Installation
 
@@ -153,7 +196,7 @@ conda activate mcgrs
 Create a `requirements.txt` file with necessary dependencies:
 
 ```bash
-pip install numpy pandas scikit-learn tensorflow torch flask jupyter matplotlib seaborn plotly
+pip install numpy pandas scikit-learn tensorflow torch flask streamlit jupyter matplotlib seaborn plotly
 ```
 
 Or if you have a requirements.txt file:
@@ -179,12 +222,28 @@ This notebook includes:
 - Evaluation and visualization
 - Example recommendations
 
+### Running the Streamlit Application
+
+To launch the interactive web interface:
+
+```bash
+streamlit run app.py
+```
+
+The application will open at `http://localhost:8501` in your default browser.
+
+**Features:**
+- Interactive user and context selection
+- Real-time recommendation generation
+- Visual rating displays
+- Model details and input visualization
+
 ### Running the Flask API Server
 
 To run the recommendation API server:
 
 ```bash
-python app.py
+python app.py  # If configured for Flask
 ```
 
 The API will be available at `http://localhost:5000`
@@ -192,27 +251,21 @@ The API will be available at `http://localhost:5000`
 ### Python API Example
 
 ```python
-# Import the application
-from app import get_recommendations, get_group_recommendations
+# Import from the notebook or module
+import torch
+from mcgrs_model import MCGRSModel
+
+# Load pre-trained model
+model = torch.load('mcgrs_model.pth')
 
 # Get single user recommendation
-recommendation = get_recommendations(
+recommendation = model.recommend(
     user_id=123,
     num_recommendations=5,
-    context={'time': 'evening', 'location': 'home'}
+    context={'course': 'DA', 'semester': 'Spring', 'lockdown': 'PRE'}
 )
 
 print(recommendation)
-
-# Get group recommendation
-group_recommendation = get_group_recommendations(
-    user_ids=[123, 456, 789],
-    num_recommendations=5,
-    aggregation_method='weighted_mean',
-    context={'time': 'evening', 'location': 'restaurant'}
-)
-
-print(group_recommendation)
 ```
 
 ### REST API Endpoints
@@ -224,11 +277,12 @@ POST http://localhost:5000/api/recommend/user
 Content-Type: application/json
 
 {
-  "user_id": 123,
-  "num_recommendations": 5,
+  "user_id": 1027,
+  "num_recommendations": 3,
   "context": {
-    "time": "evening",
-    "location": "home"
+    "course": "DA",
+    "semester": "Spring",
+    "lockdown": "PRE"
   }
 }
 ```
@@ -236,54 +290,32 @@ Content-Type: application/json
 **Response:**
 ```json
 {
-  "user_id": 123,
+  "user_id": 1027,
   "recommendations": [
     {
       "rank": 1,
-      "item_id": 456,
-      "item_title": "Product/Item Name",
-      "predicted_rating": 4.8,
-      "confidence": 0.95,
-      "explanation": "Based on your preferences..."
+      "item_name": "Human Resources Analytics",
+      "predicted_rating": 3.28,
+      "confidence": 0.95
+    },
+    {
+      "rank": 2,
+      "item_name": "Video Game Sales",
+      "predicted_rating": 3.01,
+      "confidence": 0.92
+    },
+    {
+      "rank": 3,
+      "item_name": "Food/Dishes Order System",
+      "predicted_rating": 2.99,
+      "confidence": 0.90
     }
   ],
-  "timestamp": "2024-01-15T10:30:00Z"
-}
-```
-
-#### Get Group Recommendations
-
-```bash
-POST http://localhost:5000/api/recommend/group
-Content-Type: application/json
-
-{
-  "user_ids": [123, 456, 789],
-  "num_recommendations": 5,
-  "aggregation_method": "weighted_mean",
   "context": {
-    "time": "evening",
-    "location": "restaurant"
+    "course": "DA",
+    "semester": "Spring",
+    "lockdown": "PRE"
   }
-}
-```
-
-**Response:**
-```json
-{
-  "group_id": "group_001",
-  "user_ids": [123, 456, 789],
-  "recommendations": [
-    {
-      "rank": 1,
-      "item_id": 456,
-      "item_title": "Product/Item Name",
-      "predicted_rating": 4.8,
-      "group_consensus": 0.85,
-      "individual_predictions": [4.8, 4.6, 4.9]
-    }
-  ],
-  "timestamp": "2024-01-15T10:30:00Z"
 }
 ```
 
@@ -397,13 +429,14 @@ user_id, item_id, rating, timestamp, context_json
 - **Pandas** - Data manipulation and analysis
 - **Scikit-learn** - Machine learning algorithms
 - **TensorFlow/Keras** - Deep learning framework
-- **PyTorch** - Alternative deep learning framework
+- **PyTorch** - Deep learning framework
 
-### API & Web
-- **Flask** - Web application framework
+### Web & API
+- **Streamlit** - Interactive web application framework
+- **Flask** - REST API framework
 - **REST** - API architecture
 
-### Data Processing
+### Data Processing & Visualization
 - **Matplotlib/Seaborn** - Static visualization
 - **Plotly** - Interactive visualization
 - **Jupyter** - Notebook environment
@@ -471,21 +504,15 @@ CONSENSUS_THRESHOLD = 0.7
    pip install -r requirements.txt
    ```
 
-2. **Explore the Notebook:**
+2. **Run the Streamlit App:**
+   ```bash
+   streamlit run app.py
+   ```
+   Open http://localhost:8501 in your browser
+
+3. **Explore the Notebook:**
    ```bash
    jupyter notebook MCGRS.ipynb
-   ```
-
-3. **Run the API Server:**
-   ```bash
-   python app.py
-   ```
-
-4. **Make Recommendations:**
-   ```bash
-   curl -X POST http://localhost:5000/api/recommend/user \
-     -H "Content-Type: application/json" \
-     -d '{"user_id": 123, "num_recommendations": 5}'
    ```
 
 ## Future Work
